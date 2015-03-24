@@ -10,8 +10,10 @@ To run our code first:
 - Under Project\src\PerformanceMeasures:
 	- you need to establish your connection in Connect_database.java
 	- Then, run main.java :
-		- Create your process model file. 
-		- Update the parameter of parseMXML function with your own log file name (.mxml) format but this file must be adapted with own lifecycle as seen in OrderFullfilment.mxml file.
+		- Create your process model file as,for example, the one that created in the main 
+			and also, see "https://code.google.com/p/jbpt/source/browse/trunk/jbpt-test/src/test/java/org/jbpt/test/tree/BCTreeTest.java" as an example.
+		- Update the parameter of parseMXML function with your own log file name (.mxml) format 
+			but this file must be adapted with own lifecycle as seen in OrderFullfilment.mxml file.
 		- Update parameters of *measures functions in main with your required data.
 		
 - As result of running main.java file is :
