@@ -13,8 +13,8 @@ To run our code first:
 		- Create your process model file as,for example, the one that created in the main 
 			and also, see "https://code.google.com/p/jbpt/source/browse/trunk/jbpt-test/src/test/java/org/jbpt/test/tree/BCTreeTest.java" as an example.
 		- Update the parameter of parseMXML function with your own log file name (.mxml) format 
-			but this file must be adapted with own lifecycle as seen in OrderFullfilment.mxml file.
-		- Update parameters of *measures functions in main with your required data.
+			but this file must be adapted with the lifecycle mentioned in our paper as,for example in OrderFullfilment.mxml file.
+		- Update parameters of measure functions in main with required data.
 		
 - As result of running main.java file is :
 	- raw_performance_measure table which store data about effective , service and waiting measures.
