@@ -110,11 +110,11 @@ create or replace package body performancemeasures is
                                 current_resource:= h.resources;
                                 end if;  
                                         if(h.resources = current_resource) then
-                                            if(upper(h.eventtype) = 'STARTED') then
+                                            if(upper(h.eventtype) = 'START') then
                                                 w_start := h.time_stamp;  
                                                 inserted := false;
                                             end if;
-                                            if(upper(h.eventtype) = 'COMPLETED' or upper(h.eventtype) = 'FAILED' ) then
+                                            if(upper(h.eventtype) = 'COMPLETE' or upper(h.eventtype) = 'FAIL' ) then
                                                 w_comlpete := h.time_stamp;
                                                 x := loopcycle;
                                                 complete_time := difference_time(w_start,w_comlpete);
@@ -153,14 +153,14 @@ create or replace package body performancemeasures is
                                                 flag := true;
                                             end if;
                             
-                                            if(upper(h.eventtype) = 'SUSPENDED') then
+                                            if(upper(h.eventtype) = 'SUSPEND') then
                                                 w_suspend := h.time_stamp;
                                                 suspension_time := difference_time(w_start,w_suspend);
                                                 effective_time := suspension_time + nvl(effective_time,0);
 												inserted := true;
                                             end if;
                                         elsif(h.resources != current_resource) then
-                                            if(upper(h.eventtype) = 'OFFERED' or upper(h.eventtype) = 'ALLOCATED') then
+                                            if(upper(h.eventtype) = 'OFFER' or upper(h.eventtype) = 'ALLOCATE') then
                                             if(w_start is not null)then
                                                 w_offered := h.time_stamp;
                                                 deallocation_time := difference_time(w_start,w_offered);
@@ -201,7 +201,7 @@ create or replace package body performancemeasures is
                                                 current_resource := h.resources;
                                                 end if;
                                             end if;
-                                            if(upper(h.eventtype) = 'STARTED' ) then
+                                            if(upper(h.eventtype) = 'START' ) then
                                                  if(w_start is not null and inserted = false)then
                                                      w_resume := h.time_stamp;
                                                      reallocation_time := difference_time(w_suspend,w_resume);
@@ -287,7 +287,7 @@ create or replace package body performancemeasures is
         cursor get_case
         is
             select distinct case_id,process_id
-            from eventlogS
+            from eventlog
             order by case_id;
             
         cursor get_activity (i_caseid varchar2)
@@ -353,13 +353,13 @@ create or replace package body performancemeasures is
 									end if;
                                         if(h.resources = current_resource) then
                                             if(w_start is null) then 
-                                                if((upper(h.eventtype) = 'STARTED' or upper(h.eventtype) = 'ALLOCATED') and stop = true) then
+                                                if((upper(h.eventtype) = 'START' or upper(h.eventtype) = 'ALLOCATE') and stop = true) then
                                                     w_start := h.time_stamp;  
                                                     inserted := false;
                                                     stop := false;
                                                 end if;
                                             end if;
-                                            if(upper(h.eventtype) = 'COMPLETED' or upper(h.eventtype) = 'FAILED') then
+                                            if(upper(h.eventtype) = 'COMPLETE' or upper(h.eventtype) = 'FAIL') then
                                                 w_comlpete := h.time_stamp;
                                                  x := loopcycle;
                                                 complete_time := difference_time(w_start,w_comlpete);
@@ -396,7 +396,7 @@ create or replace package body performancemeasures is
                                             end if;
 											
                                         elsif(h.resources != current_resource) then
-                                            if(upper(h.eventtype) = 'ALLOCATED' or upper(h.eventtype) = 'STARTED') then
+                                            if(upper(h.eventtype) = 'ALLOCATE' or upper(h.eventtype) = 'START') then
                                                 if(w_start is not null)then
                                                     w_allocated := h.time_stamp;
                                                     reallocation_time := difference_time(w_start,w_allocated);
@@ -432,9 +432,6 @@ create or replace package body performancemeasures is
 													w_start := h.time_stamp;
                                                 end if;
                                             end if;
-											if(upper(h.eventtype) = 'OFFERED') then
-												 current_resource := h.resources;
-											end if;
                                         end if;
                                 end loop;
                     end loop; -- end loop of activity
@@ -476,11 +473,11 @@ create or replace package body performancemeasures is
             for i in get_case loop
                     for j in get_activity (i.case_id) loop
                                 for h in getdetails(j.activity,i.case_id)loop  
-                                            if(upper(h.eventtype) = 'OFFERED' and flag = true) then
+                                            if(upper(h.eventtype) = 'OFFER' and flag = true) then
                                                 w_offered := h.time_stamp;  
 												flag := false;
                                             end if;
-                                            if(upper(h.eventtype) = 'COMPLETED' ) then
+                                            if(upper(h.eventtype) = 'COMPLETE' ) then
                                                 w_comlpete := h.time_stamp;
                                                 complete_time := difference_time(w_offered,w_comlpete);
                                                 sojourn_time := complete_time + nvl(sojourn_time,0);                                                   
@@ -574,16 +571,18 @@ create or replace package body performancemeasures is
                     
                     for j in get_activity (i.case_id) loop
 						loopcycle := 1;     
+                        x := 1;
+                        temp := 1;
                         for k1 in get_resource (j.activity,i.case_id) loop
                                 for h in getdetails(j.activity,i.case_id,k1.resources)loop  		
-                                            if(upper(h.eventtype) = 'OFFERED' and stop = true) then
+                                            if(upper(h.eventtype) = 'OFFER' and stop = true) then
                                                 w_offered := h.time_stamp;  
                                                 stop := false;
-                                            elsif(upper(h.eventtype) = 'ALLOCATED' and stop = true) then
+                                            elsif(upper(h.eventtype) = 'ALLOCATE' and stop = true) then
                                                 w_allocated := h.time_stamp;
                                                 stop := false;
                                             end if;
-                                            if(upper(h.eventtype) = 'STARTED' and  f_start = true) then
+                                            if(upper(h.eventtype) = 'START' and  f_start = true) then
                                                 w_start := h.time_stamp;
 												 if(w_offered is not null)then
 												 	start_time := difference_time(w_offered,w_start);

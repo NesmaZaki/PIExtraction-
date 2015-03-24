@@ -131,7 +131,7 @@ public class Main {
         par.parseMXML("OrderFullfilment.mxml");
         
         /* calling functions effective and service and waiting */
-       par.rawPerformanceMeassure();
+        par.rawPerformanceMeassure();
        par.serviceCase("1");
        par.activity_measure("Effective", "Ship Product");
        par.resource_measure("service", "Galal");

@@ -36,9 +36,18 @@ import org.xml.sax.SAXException;
  * @author Nesma
  */
 public class ParsingMXML {
+     /*static Connection conn = null;
+    public void conn_DB() throws SQLException {
+        String url = "jdbc:oracle:thin:@localhost:1522:MasterDB";
+        Properties props = new Properties();
+        props.setProperty("user", "M");
+        props.setProperty("password", "x");
+        //creating connection to Oracle database using JDBC
+        conn = DriverManager.getConnection(url, props);
+    }*/
 
     public void parseMXML(String FileName) throws SQLException, ParseException, ParserConfigurationException, SAXException, IOException {
-        File fXmlFile = new File(FileName);
+       File fXmlFile = new File(FileName);
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         Document doc = dBuilder.parse(fXmlFile);
@@ -51,7 +60,7 @@ public class ParsingMXML {
         String timestamp = "";
         String processID = "";
         int count = 1;
-        java.sql.Timestamp Timestamp = null;
+        java.sql.Timestamp Timestamps = null;
         for (int i = 0; i < nl.getLength(); i++) {
             Node n1 = nl.item(i);
             Element e = (Element) n1;
@@ -74,6 +83,7 @@ public class ParsingMXML {
                                 String key = pro.getAttributes().getNamedItem("name").toString();
                                 if (key.contains("concept:name")) {
                                     activity = pro.getTextContent();
+                                    
                                 }
                                 if (key.contains("transition")) {
                                     eventtype = pro.getTextContent();
@@ -90,7 +100,7 @@ public class ParsingMXML {
                                     timestamp = time.replace("T", " ");
                                     Date date = dateFormat.parse(timestamp);
                                     long timest = date.getTime();
-                                    Timestamp = new java.sql.Timestamp(timest);
+                                    Timestamps = new java.sql.Timestamp(timest);
                                 }// end if time stamp
                             }// end if childs
                         }// end loop childs
@@ -100,7 +110,7 @@ public class ParsingMXML {
                         insertRaw.setString(1, resource);
                         insertRaw.setString(2, activity);
                         insertRaw.setString(3, eventtype);
-                        insertRaw.setTimestamp(4, Timestamp);
+                        insertRaw.setTimestamp(4, Timestamps);
                         insertRaw.setString(5, id);
                         insertRaw.setInt(6, count);
                         insertRaw.setString(7, processID);
@@ -112,6 +122,7 @@ public class ParsingMXML {
                 }// end data
             }// end pi
         }// end process
+       
     }
 
     public void rawPerformanceMeassure() throws SQLException {
@@ -122,6 +133,17 @@ public class ParsingMXML {
         String serviceTime = "begin performancemeasures.Service_Time; end;";
         callStmt = conn.prepareCall(serviceTime);
         callStmt.execute();
+        
+        String waitingTime = "begin performancemeasures.waitingTime; end;";
+        CallableStatement callStmt1 = conn.prepareCall(waitingTime );
+        callStmt1.execute();
+        
+        String sojournTime = "begin performancemeasures.sojournTime; end;";
+        CallableStatement callStmts = conn.prepareCall(sojournTime);
+        callStmts.execute();
+        
+        
+        
     }
 
     public void serviceCase(String case_id) throws SQLException, ParseException {
@@ -203,7 +225,5 @@ public class ParsingMXML {
             System.out.println(measure_type + " of resource " + Resource + " within activity " + Activity + " is " + rs.getInt(1));
         }   
     }
-     
-     
     
 }
