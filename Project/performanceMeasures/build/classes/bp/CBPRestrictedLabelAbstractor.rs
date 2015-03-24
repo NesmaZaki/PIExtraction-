@@ -1,0 +1,1 @@
+org.jbpt.bp.CBPRestrictedLabelAbstractor
