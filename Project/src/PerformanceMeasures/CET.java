@@ -61,9 +61,8 @@ public class CET {
     /**
      * SQL Statement
      */
-    public void Adding_values(int case_id) throws SQLException {
-        // conn_DB();
-        c1.conn_DB();
+    public void Adding_values(int case_id) throws SQLException, ClassNotFoundException, InstantiationException {
+        c1.connectDB();
         int index = 0;
         String act = "select Max(occurrence),activity from raw_performance_measure where caseid = ? and measure_type = 'Effective' group by activity";
         PreparedStatement preStatement = conn.prepareStatement(act);
@@ -77,7 +76,7 @@ public class CET {
                 preStatement1.setInt(2, i);
                 preStatement1.setInt(3, case_id);
                 ResultSet rs1 = preStatement1.executeQuery();
-                boolean val = rs1.next(); 
+                boolean val = rs1.next();  
                 index = i - 1;
                 if (val == false) {
                     Data.get(rs.getString(2)).add(index, 0);
@@ -94,9 +93,8 @@ public class CET {
     /**
      * insert values in case effective raw performance
      */
-    public void caseEffectiveTime(RPST<ControlFlow<FlowNode>, FlowNode> r, RPSTNode<ControlFlow<FlowNode>, FlowNode> n) throws SQLException {
-
-        c1.conn_DB();
+    public void caseEffectiveTime(RPST<ControlFlow<FlowNode>, FlowNode> r, RPSTNode<ControlFlow<FlowNode>, FlowNode> n) throws SQLException, ClassNotFoundException, InstantiationException {
+        c1.connectDB();
         String cases = "select distinct case_id , process_id from eventlog";
         PreparedStatement preStatement = conn.prepareStatement(cases);
         ResultSet rs = preStatement.executeQuery();
@@ -117,7 +115,6 @@ public class CET {
             insertRaw.setInt(2, casesData.get(i));
             insertRaw.setInt(3, metric);
             insertRaw.executeUpdate();
-            conn.commit();
             Data.clear();
         }
     }

@@ -3,17 +3,20 @@
 <h5>By Nesma Mostafa , Ahmed Hany
 
 To run our code first: 
-- run SQL files using oracle :
+- run SQL files using mySQL :
 	- schema.sql 
-	- diff_timestamps.sql 
-	- PerformanceMeasures.sql.
+	- Effective_Time.sql 
+	- Service_Time.sql
+	- Sojourn_Time.sql
+	- Waiting_Time.sql
+	
 - Under Project\src\PerformanceMeasures:
 	- you need to establish your connection in Connect_database.java
 	- Then, run main.java :
 		- Create your process model file as,for example, the one that created in the main 
 			and also, see "https://code.google.com/p/jbpt/source/browse/trunk/jbpt-test/src/test/java/org/jbpt/test/tree/BCTreeTest.java" as an example.
-		- Update the parameter of parseMXML function with your own log file name (.mxml) format 
-			but this file must be adapted with the lifecycle mentioned in our paper as,for example in OrderFullfilment.mxml file.
+		- Update the parameter of parsing function with your own log file name (.xes) format 
+			but this file must be adapted with the lifecycle mentioned in our paper as,for example in OrderFullfilment.xes file.
 		- Update parameters of measure functions in main with required data.
 		
 - As result of running main.java file is :
