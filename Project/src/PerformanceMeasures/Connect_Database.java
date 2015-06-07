@@ -21,7 +21,7 @@ public class Connect_Database {
      * @throws java.lang.InstantiationException
      * @throws java.sql.SQLException **/
     public void connectDB() throws ClassNotFoundException, InstantiationException, SQLException {
-        String url = "jdbc:mysql://localhost:3306/test";
+        String url = "jdbc:mysql://localhost:3306/mydb";
         try {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
         } catch (IllegalAccessException ex) {
